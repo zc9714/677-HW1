@@ -1,0 +1,49 @@
+---
+title: "677 HW1"
+author: "Chi Zhang"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+To show how did the author of the book get critical value m that while m=69 to thwarts type 1 error and m= 73 to thwarts type 2 error, I write a function named Plot to show the process of finding these two critical value.
+I set p as a sequence from 0.4 to 1 by 0.01 each. I used probability density function to get desired a(p), the sum probability we reject the null hypothesis is true.
+```{r}
+library(ggplot2)
+Plot <-function(m){
+n <-100
+p <-seq(0.4,1,0.01)
+ap <-c()
+for (i in p){
+  a <- sum(dbinom(m:n,n,i))
+  ap <-c(ap,a)
+}
+ggplot()+geom_line(aes(p,ap))+geom_rect(aes(xmin = 0.6, xmax = 0.8, ymin = 0.05, ymax = 0.95),alpha=0,color="grey")+ggtitle("The power curve")+ylab("alpha")
+}
+```
+
+I started to plug value of m from 0-100 to find the critical values which pass the bottom left and top right of the rectangle in Figure 3.7. As the m increases, the line moves to the right.
+Examples of m= 65, 70, 75.
+```{r}
+Plot(65)
+Plot(70)
+Plot(75)
+```
+
+After narrowing down numbers, I found while m=69, the line just enters the bottom, and whole m=73, the line just leaves from the top. Therefore, 69 is the smallest m thwarts type 1 error and 73 is the largest which thwarts a type 2 error.
+```{r}
+n <-100
+p <-seq(0.4,1,0.01)
+ap69 <-c()
+for (i in p){
+  a <- sum(dbinom(69:n,n,i))
+  ap69 <-c(ap69,a)
+}
+ap73 <-c()
+for (i in p){
+  a <- sum(dbinom(73:n,n,i))
+  ap73 <-c(ap73,a)
+}
+ggplot()+geom_line(aes(p,ap69))+geom_line(aes(p,ap73))+geom_rect(aes(xmin = 0.6, xmax = 0.8, ymin = 0.05, ymax = 0.95),alpha=0,color="grey")+ggtitle("The power curve")+ylab("alpha")
+```
+
